@@ -1,56 +1,39 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/App.css";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      renderBall: false,
-      ballPosition: { left: "0px" },
-    };
-    this.renderChoice = this.renderBallOrButton.bind(this);
-    this.buttonClickHandler = this.buttonClickHandler.bind(this);
-  }
+const App = () => {
+  const [renderBall, setRenderBall] = useState(false);
+  const [ballPosition, setBallPosition] = useState({ left: "0px" });
 
-  buttonClickHandler() {
-    this.setState({
-      renderBall: true,
-    });
-    document.addEventListener("keydown", this.handleArrowRight);
-  }
+  const buttonClickHandler = () => {
+    setRenderBall(true);
+  };
 
-  handleArrowRight = (event) => {
-    if (event.key === "ArrowRight" && this.state.renderBall) {
-      this.setState((prevState) => ({
-        ballPosition: {
-          left: parseInt(prevState.ballPosition.left, 10) + 5 + "px",
-        },
+  const handleArrowRight = (event) => {
+    if (event.key === "ArrowRight" && renderBall) {
+      setBallPosition((prevPosition) => ({
+        left: parseInt(prevPosition.left, 10) + 5 + "px",
       }));
     }
   };
 
-  renderBallOrButton() {
-    if (this.state.renderBall) {
-      return (
-        <div
-          className="ball"
-          style={this.state.ballPosition}
-        ></div>
-      );
+  useEffect(() => {
+    document.addEventListener("keydown", handleArrowRight);
+
+    return () => {
+      document.removeEventListener("keydown", handleArrowRight);
+    };
+  }, [renderBall]);
+
+  const renderBallOrButton = () => {
+    if (renderBall) {
+      return <div className="ball" style={ballPosition}></div>;
     } else {
-      return (
-        <button onClick={this.buttonClickHandler}>Start</button>
-      );
+      return <button onClick={buttonClickHandler}>Start</button>;
     }
-  }
+  };
 
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleArrowRight);
-  }
-
-  render() {
-    return <div className="playground">{this.renderBallOrButton()}</div>;
-  }
-}
+  return <div className="playground">{renderBallOrButton()}</div>;
+};
 
 export default App;
