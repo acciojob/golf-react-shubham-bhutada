@@ -3,7 +3,7 @@ import "../styles/App.css";
 
 const App = () => {
   const [renderBall, setRenderBall] = useState(false);
-  const [ballPosition, setBallPosition] = useState({ left: "0px" });
+  const [ballPosition, setBallPosition] = useState({ left: "5px" });
 
   const buttonClickHandler = () => {
     setRenderBall(true);
